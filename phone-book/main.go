@@ -76,7 +76,7 @@ func main() {
 	var phone string
 	var filename string
 
-	flag.StringVar(&filename, "filename", filenameDefault, "Specify a path where the phonebook.json will be stored")
+	flag.StringVar(&filename, "filename", filenameDefault, "Specify a path where file will be stored")
 
 	addCmd := flag.NewFlagSet("add", flag.ExitOnError)
 	addCmd.StringVar(&name, "name", "", "Name of the person")

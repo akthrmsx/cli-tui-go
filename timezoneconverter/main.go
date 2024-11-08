@@ -16,9 +16,7 @@ type TimeInfo struct {
 
 const timeLayout = "2006-01-02 15:04"
 
-var timezones []string
-
-func getOffSet(targetTime time.Time, timezoneTime time.Time) string {
+func getOffset(targetTime time.Time, timezoneTime time.Time) string {
 	_, timezone1 := targetTime.Zone()
 	_, timezone2 := timezoneTime.Zone()
 	hours := float64(timezone1-timezone2) / 3600.0
@@ -31,7 +29,7 @@ func getOffSet(targetTime time.Time, timezoneTime time.Time) string {
 	}
 }
 
-func convertTime(targetTime time.Time) error {
+func convertTime(targetTime time.Time, timezones []string) error {
 	converted := []TimeInfo{}
 	converted = append(converted, TimeInfo{"Local", targetTime.Format(timeLayout), "0 hours 0 minutes"})
 
@@ -43,7 +41,7 @@ func convertTime(targetTime time.Time) error {
 		}
 
 		timezoneTime := targetTime.In(location)
-		offset := getOffSet(targetTime, timezoneTime)
+		offset := getOffset(targetTime, timezoneTime)
 		converted = append(converted, TimeInfo{timezone, timezoneTime.Format(timeLayout), offset})
 	}
 
@@ -60,6 +58,7 @@ func convertTime(targetTime time.Time) error {
 
 func main() {
 	targetTime := time.Now()
+	timezones := []string{}
 
 	flag.Func("targetTime", fmt.Sprintf("Date-time in %q format", timeLayout), func(s string) error {
 		location, err := time.LoadLocation("Local")
@@ -106,5 +105,5 @@ func main() {
 		timezones = append(timezones, timezone)
 	}
 
-	convertTime(targetTime)
+	convertTime(targetTime, timezones)
 }
